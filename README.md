@@ -1,5 +1,7 @@
 # TimerWheel
 
+[![NuGet](https://img.shields.io/nuget/v/TimerWheel.svg)](https://www.nuget.org/packages/TimerWheel)
+
 A caller-driven hashed timing wheel for .NET, allocation-free once warm. No background threads, no internal scheduling and no clock ownership.
 
 Designed for single-threaded event loops, simulations and deterministic testing where the host controls time and execution. Not thread-safe: schedule, cancel and poll from one thread (the loop's).
@@ -19,6 +21,14 @@ TimerWheel deliberately separates time management from execution.
 The host owns the clock, decides when the wheel advances, and determines where callbacks execute. TimerWheel manages deadlines and expiration without imposing a threading model, event loop or scheduling discipline.
 
 This makes it suitable for embedding into existing runtimes rather than competing with them.
+
+## Usage
+
+Install [TimerWheel from NuGet](https://www.nuget.org/packages/TimerWheel):
+
+```bash
+dotnet add package TimerWheel
+```
 
 Time is a `long` (e.g. UTC ticks) supplied by you. A timer fires on the first poll at or past its exact deadline; 2^shift time units set the width of a spoke, trading scan cost against how far one revolution of the wheel reaches.
 
