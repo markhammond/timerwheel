@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsAotCompatible>true</IsAotCompatible>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>TimerWheel</RootNamespace>
+    <IsPackable>true</IsPackable>
+    <PackageId>TimerWheel</PackageId>
+    <Description>A caller-driven hashed timing wheel for .NET, allocation-free once warm: O(1) cancel and amortized O(1) schedule, generation-checked timer ids (a stale id never cancels someone else's timer), an occupancy bitmap so a large time jump (backtests, simulations) skips the empty spokes instead of costing O(ticks), and bounded polls that delay due timers rather than drop them. Driven by your own clock: time is a long. Not thread-safe: use it from one thread.</Description>
+    <PackageTags>timer-wheel;timing-wheel;hashed-wheel-timer;hashed-timing-wheel;timers;scheduling;zero-allocation;low-latency;backtesting;simulation</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="TimerWheel.Tests" />
+  </ItemGroup>
+</Project>

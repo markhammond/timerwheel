@@ -1,0 +1,10 @@
+#nullable enable
+TimerWheel.ITimerSink<TPayload>
+TimerWheel.ITimerSink<TPayload>.OnExpired(long timerId, in TPayload payload) -> void
+TimerWheel.TimerWheel<TPayload>
+TimerWheel.TimerWheel<TPayload>.Cancel(long timerId) -> bool
+TimerWheel.TimerWheel<TPayload>.Count.get -> int
+TimerWheel.TimerWheel<TPayload>.Poll<TSink>(long now, ref TSink sink) -> int
+TimerWheel.TimerWheel<TPayload>.Poll<TSink>(long now, ref TSink sink, int limit, out bool more) -> int
+TimerWheel.TimerWheel<TPayload>.Schedule(long deadline, in TPayload payload) -> long
+TimerWheel.TimerWheel<TPayload>.TimerWheel(long start, int resolutionShift = 10, int spokes = 512, int initialCapacity = 64) -> void

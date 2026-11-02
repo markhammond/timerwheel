@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/TimerWheel/TimerWheel.csproj" />
+  <Project Path="tests/TimerWheel.Tests/TimerWheel.Tests.csproj" />
+</Solution>
