@@ -48,6 +48,26 @@ struct Dispatch : ITimerSink<string>
 }
 ```
 
+## Why not a priority queue?
+
+The .NET Base Class Library (BCL) already has a `PriorityQueue<TElement, TPriority>`. It is well tested, and answers which deadline is next. A well-tuned priority queue also tracks each timer's position, so it can cancel in O(log n) steps. But timers rarely need the next deadline, and even a well-tuned queue is slower at what timers do most.
+
+- **Most timers never fire.** Timeouts, retries and watchdogs are scheduled in advance, in the expectation of being cancelled. The BCL's queue can't cancel cheaply, so cancelled timers are left in place until their deadline; a well-tuned queue cancels in O(log n) steps. Here, cancelling takes constant time.
+- **Firing is cheaper.** Each timer a priority queue fires costs O(log n) steps, each likely a cache miss once the queue is large. Here, it costs constant time, plus a scan of the spokes passed (see below).
+- **Better tail performance.** Adding is a draw on average, but a short deadline among long ones climbs the whole queue: O(log n). Here, scheduling and cancelling take constant time, every time, once storage is warm (or sized with `initialCapacity`).
+
+### When a priority queue is better
+
+The wheel has real costs too:
+
+- **Exact order.** A priority queue fires in deadline order. This wheel orders by spoke: within a spoke (2^shift time units), timers fire in the order they were scheduled.
+- **Knowing when to wake.** A priority queue can `Peek` the next deadline. This wheel can't without a scan, so it expects to be polled at a steady rate.
+- **Far-off timers.** A timer more than one turn away (spokes × 2^shift) is checked on every pass of its spoke; a priority queue never looks at it early. Size the wheel so most deadlines fall within one turn.
+- **Polling isn't free.** Each poll scans the spokes passed since the last, even for one far-off timer; a priority queue checks a single item.
+- **Small queues.** Constant time is not zero time: a timer's fields span several cache lines, while a small heap fits in cache. With a few hundred timers, a well-tuned queue may well be faster.
+- **Memory isn't given back.** Storage grows to the most timers ever held, and stays there.
+- **These are arguments, not measurements.** If your timers are rarely cancelled, wait many turns, or need exact order, use a priority queue. Otherwise, measure your workload before trusting either side, including this README.
+
 ## Build
 
 ```bash
